@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neem Bio-Analysis Dashboard UI - Idle State</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        
+        html { overflow: hidden; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            display: flex; flex-direction: column; height: 100vh;
+        }
+        .data-card {
+            background-color: rgba(255, 255, 255, 0.8);
+            border: 1px solid #e2e8f0;
+            backdrop-filter: blur(16px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease-in-out;
+        }
+        .data-card:hover {
+            border-color: #10b981;
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.1);
+            transform: translateY(-2px);
+        }
+        .header-gradient {
+            background-image: linear-gradient(90deg, #22c55e, #10b981, #14b8a6);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .phyto-marker {
+            width: 10px; height: 10px; background-color: #10b981; border-radius: 50%;
+            margin-top: 0.3rem; box-shadow: 0 0 6px rgba(16, 185, 129, 0.6); flex-shrink: 0;
+        }
+
+        .sensor-bar-bg {
+            background-color: #e2e8f0;
+            border-radius: 9999px;
+            height: 10px;
+            width: 100%;
+            overflow: hidden;
+        }
+        .sensor-bar-fill {
+            height: 100%;
+            border-radius: 9999px;
+            width: 0;
+        }
+        
+        .qa-circle {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-width: 8px;
+            border-color: #e2e8f0;
+        }
+     
+        .radar-area { fill: #10b981; fill-opacity: 0.4; stroke: #059669; stroke-width: 2px; }
+        .grid-line { stroke: #cbd5e1; stroke-opacity: 0.8; }
+        .axis-line { stroke: #94a3b8; }
+        .axis-label { font-size: 11px; fill: #475569; font-weight: 600; }
+    </style>
+</head>
+<body class="p-4">
+
+    <header class="text-center mb-3">
+        <h1 class="text-3xl font-extrabold text-gray-800">
+            <span class="header-gradient inline-block">Bio-Analysis Report</span>
+        </h1>
+        <p class="text-md text-emerald-600 font-semibold tracking-wider">Light Mode</p>
+    </header>
+
+    <div class="flex-grow grid grid-cols-10 grid-rows-6 gap-4">
+
+        <div class="col-span-10 row-span-1 data-card p-3 rounded-2xl flex flex-col justify-around">
+            <div class="grid grid-cols-3 gap-6">
+                <div class="flex flex-col">
+                    <div class="flex justify-between items-baseline mb-1">
+                        <span class="text-sm font-bold text-gray-700">pH Level</span>
+                        <span id="ph-value" class="text-lg font-extrabold text-blue-500">--</span>
+                    </div>
+                    <div class="sensor-bar-bg"><div id="ph-bar" class="sensor-bar-fill bg-blue-500" style="width: 0%;"></div></div>
+                </div>
+                <div class="flex flex-col">
+                    <div class="flex justify-between items-baseline mb-1">
+                        <span class="text-sm font-bold text-gray-700">Total Dissolved Solids</span>
+                        <span class="text-lg font-extrabold text-teal-500"><span id="tds-value">--</span> ppm</span>
+                    </div>
+                    <div class="sensor-bar-bg"><div id="tds-bar" class="sensor-bar-fill bg-teal-500" style="width: 0%;"></div></div>
+                </div>
+                <div class="flex flex-col">
+                    <div class="flex justify-between items-baseline mb-1">
+                        <span class="text-sm font-bold text-gray-700">C.P.E. Reading</span>
+                        <span class="text-lg font-extrabold text-indigo-500"><span id="cpe-value">--</span> mV</span>
+                    </div>
+                    <div class="sensor-bar-bg"><div id="cpe-bar" class="sensor-bar-fill bg-indigo-500" style="width: 0%;"></div></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-span-7 row-span-5 grid grid-cols-5 gap-4">
+            <div class="col-span-3 data-card p-2 rounded-2xl flex flex-col">
+                <h2 class="text-lg font-bold text-emerald-600 text-center border-b-2 border-emerald-200 pb-1 mb-1">Taste Fingerprint</h2>
+                <div class="flex-grow" id="radar-container">
+                    <svg id="taste-radar-chart" class="w-full h-full"></svg>
+                </div>
+            </div>
+            <div class="col-span-2 flex flex-col gap-4">
+                <div class="data-card p-3 rounded-2xl">
+                    <h2 class="text-base font-bold text-emerald-600 text-center mb-1">Taste Breakdown</h2>
+                    <div class="space-y-1 text-xs text-gray-700">
+                        <div class="flex justify-between items-center"><div class="w-2.5 h-2.5 bg-red-500 rounded-full mr-2"></div>Sweet: <span id="taste-sweet" class="ml-1 font-bold text-red-600">0%</span></div>
+                        <div class="flex justify-between items-center"><div class="w-2.5 h-2.5 bg-amber-500 rounded-full mr-2"></div>Sour: <span id="taste-sour" class="ml-1 font-bold text-amber-600">0%</span></div>
+                        <div class="flex justify-between items-center"><div class="w-2.5 h-2.5 bg-lime-500 rounded-full mr-2"></div>Bitter: <span id="taste-bitter" class="ml-1 font-bold text-lime-600">0%</span></div>
+                        <div class="flex justify-between items-center"><div class="w-2.5 h-2.5 bg-orange-500 rounded-full mr-2"></div>Pungent: <span id="taste-pungent" class="ml-1 font-bold text-orange-600">0%</span></div>
+                        <div class="flex justify-between items-center"><div class="w-2.5 h-2.5 bg-sky-500 rounded-full mr-2"></div>Astringent: <span id="taste-astringent" class="ml-1 font-bold text-sky-600">0%</span></div>
+                        <div class="flex justify-between items-center"><div class="w-2.5 h-2.5 bg-fuchsia-500 rounded-full mr-2"></div>Salty: <span id="taste-salty" class="ml-1 font-bold text-fuchsia-600">0%</span></div>
+                    </div>
+                </div>
+                <div class="data-card p-3 rounded-2xl flex-grow flex flex-col items-center">
+                    <h2 class="text-base font-bold text-emerald-600 text-center mb-2">Component Distribution</h2>
+                    <div id="pie-placeholder" class="flex-grow flex items-center justify-center w-full transition-opacity duration-500">
+                        <p class="text-slate-400 text-sm">Awaiting analysis...</p>
+                    </div>
+                    <div id="pie-chart-wrapper" class="w-full flex-grow opacity-0 transition-opacity duration-500"></div>
+                    <div id="pie-legend-wrapper" class="grid grid-cols-2 gap-x-3 text-xs mt-2 font-semibold opacity-0 transition-opacity duration-500">
+                        <div class="flex items-center"><div class="w-2 h-2 rounded-full mr-1.5" style="background-color: #22c55e;"></div>Nimbin (<span id="pie-nimbin">0%</span>)</div>
+                        <div class="flex items-center"><div class="w-2 h-2 rounded-full mr-1.5" style="background-color: #14b8a6;"></div>Nimbidin (<span id="pie-nimbidin">0%</span>)</div>
+                        <div class="flex items-center"><div class="w-2 h-2 rounded-full mr-1.5" style="background-color: #06b6d4;"></div>Nimbolide (<span id="pie-nimbolide">0%</span>)</div>
+                        <div class="flex items-center"><div class="w-2 h-2 rounded-full mr-1.5" style="background-color: #f59e0b;"></div>Quercetin (<span id="pie-quercetin">0%</span>)</div>
+                    </div>
+                </div>
+                <div class="data-card p-2 rounded-2xl flex-grow">
+                    <div id="qa-indicator" class="qa-circle">
+                        <span id="qa-text" class="text-3xl font-extrabold text-slate-400">IDLE</span>
+                        <span id="qa-subtext" class="text-xs text-slate-400">Awaiting Analysis</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-span-3 row-span-5 flex flex-col gap-4">
+            <div class="data-card p-4 rounded-2xl flex-shrink">
+                <h2 class="text-lg font-bold text-emerald-600 border-b-2 border-emerald-200 pb-1 mb-2">Compound Profile</h2>
+                <p class="text-sm font-semibold text-gray-800">Name: <span class="text-gray-400 font-extrabold">--</span></p>
+                <p class="text-xs text-gray-600 leading-relaxed">Insert sample here to start analysis and identify the herb.</p>
+            </div>
+            <div class="data-card p-4 rounded-2xl flex-grow">
+                <h2 class="text-lg font-bold text-emerald-600 border-b-2 border-emerald-200 pb-1 mb-2">Key Components</h2>
+                <ul class="list-none space-y-2 text-xs">
+                    <li class="flex items-start"><div class="phyto-marker mr-2 bg-gray-400 shadow-none"></div><div><span class="font-medium text-gray-400">Component 1:</span> --</div></li>
+                    <li class="flex items-start"><div class="phyto-marker mr-2 bg-gray-400 shadow-none"></div><div><span class="font-medium text-gray-400">Component 2:</span> --</div></li>
+                    <li class="flex items-start"><div class="phyto-marker mr-2 bg-gray-400 shadow-none"></div><div><span class="font-medium text-gray-400">Component 3:</span> --</div></li>
+                    <li class="flex items-start"><div class="phyto-marker mr-2 bg-gray-400 shadow-none"></div><div><span class="font-medium text-gray-400">Component 4:</span> --</div></li>
+                </ul>
+            </div>
+            <button id="start-analysis-btn" class="w-full py-3 bg-emerald-500 text-white font-bold rounded-full shadow-lg transition duration-300 transform hover:scale-105 text-lg">
+                Analyze
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const initialTasteData = [
+            { axis: "Sweet", value: 0 }, { axis: "Sour", value: 0 }, { axis: "Bitter", value: 0 },
+            { axis: "Pungent", value: 0 }, { axis: "Astringent", value: 0 }, { axis: "Salty", value: 0 }
+        ];
+        const initialPieData = [
+            { label: 'Nimbin', value: 25, color: '#22c55e', legendId: 'pie-nimbin' },
+            { label: 'Nimbidin', value: 25, color: '#14b8a6', legendId: 'pie-nimbidin' },
+            { label: 'Nimbolide', value: 25, color: '#06b6d4', legendId: 'pie-nimbolide' },
+            { label: 'Quercetin', value: 25, color: '#f59e0b', legendId: 'pie-quercetin' }
+        ];
+
+        function drawRadarChart(data) {
+            const c = d3.select("#taste-radar-chart");
+            c.selectAll("*").remove();
+            const e = d3.select("#radar-container").node(),
+                t = { top: 25, right: 25, bottom: 25, left: 25 },
+                a = e.clientWidth - t.left - t.right,
+                r = e.clientHeight - t.top - t.bottom,
+                n = Math.min(a, r) / 2,
+                l = c.append("g").attr("transform", `translate(${a / 2 + t.left}, ${r / 2 + t.top})`),
+                d = d3.scaleLinear().range([0, n]).domain([0, 100]),
+                s = 2 * Math.PI / data.length,
+                i = l.append("g");
+            i.selectAll(".levels").data(d3.range(1, 4).reverse()).enter().append("circle").attr("class", "grid-line").attr("r", e => n / 3 * e).style("fill", "none");
+            const o = i.selectAll(".axis").data(data).enter().append("g");
+            o.append("line").attr("x1", 0).attr("y1", 0).attr("x2", (e, t) => d(100) * Math.cos(s * t - Math.PI / 2)).attr("y2", (e, t) => d(100) * Math.sin(s * t - Math.PI / 2)).attr("class", "axis-line");
+            o.append("text").attr("class", "axis-label").attr("x", (e, t) => d(115) * Math.cos(s * t - Math.PI / 2)).attr("y", (e, t) => d(115) * Math.sin(s * t - Math.PI / 2)).attr("text-anchor", "middle").text(e => e.axis);
+       
+            const p = d3.lineRadial().radius(e => d(e.value)).angle((e, t) => t * s);
+            l.append("path").datum(data).attr("class", "radar-area").attr("d", p(data)); 
+        }
+        
+        function drawPieChart(data) {
+            const e = d3.select("#pie-chart-wrapper").node(),
+                t = e.clientWidth,
+                a = e.clientHeight,
+                r = Math.min(t, a) / 2;
+            d3.select("#pie-chart-wrapper").selectAll("*").remove();
+            const n = d3.select("#pie-chart-wrapper").append("svg").attr("width", t).attr("height", a).append("g").attr("transform", `translate(${t / 2}, ${a / 2})`),
+                l = d3.pie().value(e => e.value).sort(null),
+                d = d3.arc().innerRadius(r * 0.6).outerRadius(r * .9);
+            n.append("circle")
+                .attr("fill", "#e2e8f0")
+                .attr("r", r * 0.9)
+                .attr("stroke", "#cbd5e1")
+                .style("stroke-width", "1px");
+            
+            n.append("circle")
+                .attr("fill", "white")
+                .attr("r", r * 0.6);
+        }
+        
+        function initializeDashboardUI() {
+          
+            drawPieChart(initialPieData);
+            drawRadarChart(initialTasteData); 
+        }
+        
+        document.addEventListener('DOMContentLoaded', initializeDashboardUI);
+
+        window.addEventListener('resize', initializeDashboardUI);
+    
+        document.getElementById('start-analysis-btn').onclick = function(e) {
+            e.preventDefault();
+            console.log("Analyze button clicked. This is a static UI template.");
+        };
+    </script>
+</body>
+</html>

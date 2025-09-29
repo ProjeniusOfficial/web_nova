@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-TONGUE - Unveiling the True Nature of Herbs</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        
+        :root {
+            
+            --primary-accent: #20c997;
+            --secondary-accent: #0d6efd;
+            --font-primary: 'Roboto', sans-serif;
+            --link-hover-color: var(--primary-accent);
+        }
+
+        
+        .dark-theme {
+            --bg-color: #101423;
+            --box-bg: #15192d;
+            --text-light: #ffffff;
+            --text-dim: #9aa0a6;
+            --button-text-color: #101423;
+            --border-color: #3f4458;
+            --shadow-color: rgba(0, 0, 0, 0.5);
+            --hero-text-color: #ffffff;
+            --hero-button-bg: rgba(255, 255, 255, 0.1);
+            --hero-button-border: rgba(255, 255, 255, 0.3);
+            --hero-button-hover-bg: rgba(255, 255, 255, 0.2);
+            --footer-bg: var(--box-bg);
+            --footer-text: var(--text-dim);
+            --footer-border: var(--border-color);
+        }
+
+        
+        .light-theme {
+            --bg-color: #f0f2f5;
+            --box-bg: #ffffff;
+            --text-light: #343a40;
+            --text-dim: #6c757d;
+            --button-text-color: #ffffff;
+            --border-color: #dee2e6;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --hero-text-color: #ffffff;
+            --hero-button-bg: rgba(0, 0, 0, 0.1);
+            --hero-button-border: rgba(0, 0, 0, 0.3);
+            --hero-button-hover-bg: rgba(0, 0, 0, 0.2);
+            --footer-bg: var(--box-bg);
+            --footer-text: var(--text-dim);
+            --footer-border: var(--border-color);
+        }
+
+        
+        body {
+            font-family: var(--font-primary);
+            margin: 0;
+            background-color: var(--bg-color);
+            color: var(--text-light);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .page-container {
+            width: 100%;
+            max-width: 1400px;
+        }
+
+        a {
+            color: var(--text-light);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        h1, h2 {
+            margin: 0;
+            font-weight: 700;
+        }
+
+       
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-accent);
+        }
+        .tagline {
+            font-size: 0.8rem;
+            font-weight: 300;
+            color: var(--text-dim);
+            margin-left: 10px;
+        }
+
+        .nav-links a {
+            margin-left: 20px;
+            font-size: 0.9rem;
+            color: var(--text-dim);
+        }
+        
+        .theme-toggle-btn {
+            background: none;
+            border: 1px solid var(--border-color);
+            color: var(--text-dim);
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            margin-left: 15px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .theme-toggle-btn:hover {
+            background-color: var(--border-color);
+        }
+
+        
+        .hero-section {
+            
+            background-image: url('../asset/top1.jpg'); 
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            padding: 80px 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            height: 450px;
+            color: var(--hero-text-color);
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+
+        .hero-content-overlay {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+        }
+
+        .hero-content-overlay h1 {
+            font-size: 3.5rem;
+            line-height: 1.2;
+            margin-bottom: 15px;
+            color: var(--hero-text-color);
+        }
+        
+        .sensor-btn {
+            background-color: var(--hero-button-bg);
+            color: var(--hero-text-color);
+            border: 1px solid var(--hero-button-border);
+            padding: 10px 25px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            font-weight: 400;
+            cursor: pointer;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        
+        .solution-section {
+            text-align: center;
+            padding: 60px 20px;
+            background-color: var(--box-bg);
+            transition: background-color 0.3s;
+        }
+        
+        .solution-section h2 {
+            color: var(--text-light);
+            margin-bottom: 50px;
+            font-size: 2rem;
+        }
+
+        
+        .flow-container {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr); 
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto 50px auto; 
+            text-align: left;
+        }
+
+        
+        .herb-block-container {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 20px;
+            max-width: 1400px;
+            margin: 50px auto 0 auto;
+            text-align: center;
+        }
+        
+        .section-subtitle {
+            font-size: 1.5rem;
+            font-weight: 300;
+            color: var(--primary-accent);
+            margin-bottom: 20px;
+        }
+
+        
+        @media (min-width: 600px) {
+            .flow-container, .herb-block-container {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 15px;
+            }
+        }
+        
+        
+        @media (min-width: 1200px) {
+            .flow-container {
+                
+                grid-template-columns: repeat(7, 1fr);
+                gap: 10px;
+            }
+            .herb-block-container {
+                
+                grid-template-columns: repeat(6, 1fr);
+                gap: 10px;
+            }
+        }
+
+        
+        .flow-step-box, .herb-box {
+            background-color: var(--box-bg);
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px var(--shadow-color);
+            transition: all 0.3s;
+            height: 100%; 
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+        .flow-step-box:hover, .herb-box:hover {
+            transform: translateY(-3px);
+            border-color: var(--primary-accent);
+        }
+
+        .flow-step-box div:first-child {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px; 
+        }
+
+        .flow-step-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-accent);
+            line-height: 1;
+            margin-right: 10px;
+        }
+        
+       
+        .flow-icon {
+            font-size: 1.5rem; 
+            line-height: 1;
+            color: var(--secondary-accent); 
+        }
+
+        .flow-step-title {
+            font-size: 0.95rem; 
+            font-weight: 700;
+            color: var(--text-light);
+            margin-bottom: 5px;
+        }
+
+        .flow-step-list {
+            list-style: none;
+            padding: 0;
+            margin: 5px 0 0 0;
+            font-size: 0.8rem; 
+            color: var(--text-dim);
+        }
+
+        .flow-step-list li {
+            margin-bottom: 3px;
+        }
+
+       
+.solution-section {
+   
+    text-align: center;
+    padding: 60px 20px;
+    background-color: var(--box-bg);
+    transition: background-color 0.3s;
+}
+
+.flow-container {
+    
+    margin: 0 auto 60px auto; 
+    
+}
+
+
+.features-container {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr); 
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+
+.feature-card {
+    background-color: var(--box-bg);
+    border: 1px solid var(--border-color);
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px var(--shadow-color);
+    transition: all 0.3s;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    text-align: center;
+    height: 100%;
+}
+.feature-card:hover {
+    transform: translateY(-5px); 
+    border-color: var(--secondary-accent);
+}
+.feature-icon {
+    font-size: 3rem;
+    color: var(--primary-accent);
+    margin-bottom: 15px;
+}
+.feature-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-light);
+    margin-bottom: 10px;
+}
+.feature-description {
+    font-size: 0.9rem;
+    color: var(--text-dim);
+}
+
+
+@media (min-width: 600px) {
+    .features-container {
+        grid-template-columns: repeat(2, 1fr); 
+    }
+}
+@media (min-width: 850px) {
+    .features-container {
+        grid-template-columns: repeat(4, 1fr); 
+    }
+}
+
+
+       
+        .footer {
+            width: 100%;
+            background-color: var(--footer-bg);
+            border-top: 1px solid var(--footer-border);
+            display: flex;
+            justify-content: space-around;
+            padding: 40px 20px;
+            color: var(--footer-text);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .foo-content {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            max-width: 250px;
+            padding: 0 10px;
+        }
+        
+        
+        .foo-content:first-child {
+           
+            align-items: center; 
+            text-align: center;
+        }
+        .foo-content:first-child img {
+            width:50px;
+            height:50px; 
+            margin-top:0px;
+            margin-bottom: 5px; 
+            border-radius: 0;
+            border: none;
+        }
+
+        .foo-content:last-child {
+            align-items: center;
+            text-align: center;
+        }
+
+        
+        .social-icons img {
+            width: 40px; 
+            height: 40px;
+            margin: 0 5px; 
+            border-radius: 50%;
+        }
+
+        
+        .goog-te-gadget-simple {
+            background-color: var(--box-bg) !important;
+            border-color: var(--footer-border) !important;
+        }
+        .goog-te-gadget-simple span {
+            color: var(--footer-text) !important;
+        }
+
+        
+        @media (max-width: 850px) {
+            .content-wrapper {
+                flex-direction: column; 
+            }
+            .left-content, .center-graphic, .right-graphic {
+                margin-bottom: 40px;
+                max-width: 100%;
+            }
+            .center-graphic {
+                margin: 40px 0;
+            }
+            .right-graphic {
+                width: 80%;
+            }
+            
+            /* Footer stacking */
+            .footer {
+                flex-wrap: wrap;
+                justify-content: space-between;
+            }
+            .foo-content {
+                width: 45%;
+                margin-bottom: 30px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .navbar {
+                flex-direction: column;
+                padding: 10px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body class="dark-theme">
+
+    <div class="page-container">
+        
+        <header class="navbar">
+            <div class="logo">E-TONGUE <span class="tagline">Unveiling the True Nature of Herbs</span></div>
+            <nav class="nav-links">
+                <a href="page.html">Home</a>
+                <a href="dash.html">Dashboard</a> 
+                <a href="real.html">Real-Time</a>
+                <a href="register.html">Register</a>
+                <a href="herb.html">Herbs</a>
+                
+                <button class="theme-toggle-btn" id="theme-toggle">Switch to Light</button>
+            </nav>
+        </header>
+
+        <section class="hero-section" style="background-image: url('../asset/top1.jpg');">
+            <div class="hero-content-overlay">
+                <h1>E-Tongue Herbal Testing System</h1>
+                <p>Advanced electronic tongue technology for comprehensive herbal purity analysis and taste fingerprinting using AI-powered sensor arrays</p>
+                <div class="sensor-buttons">
+                    <button class="sensor-btn">pH Sensors</button>
+                    <button class="sensor-btn">TDS Analysis</button>
+                    <button class="sensor-btn">MQ136 Gas Detection</button>
+                    <button class="sensor-btn">Carbon Electrodes</button>
+                </div>
+            </div>
+        </section>
+        
+        <section class="solution-section">
+            <h2>E-TONGUE Analysis Flow</h2>
+            <p class="section-subtitle">7 Key Steps</p>
+
+            <div class="flow-container">
+                
+                <div class="flow-step-box">
+                    <div>
+                        <div class="flow-step-number">1</div>
+                        <div class="flow-icon">🧪</div>
+                    </div>
+                    <div class="flow-step-title">Sample Collection</div>
+                    <ul class="flow-step-list">
+                        <li>Pure, Adulterated Dilated, Saturated</li>
+                        <li>Proper sample storage</li>
+                    </ul>
+                </div>
+
+                <div class="flow-step-box">
+                    <div>
+                        <div class="flow-step-number">2</div>
+                        <div class="flow-icon">🔬</div>
+                    </div>
+                    <div class="flow-step-title">Multi-Sensor Array</div>
+                    <ul class="flow-step-list">
+                        <li>pH measurement</li>
+                        <li>TDS detection</li>
+                        <li>Toxicity analysis (CPE)</li>
+                    </ul>
+                </div>
+                
+                <div class="flow-step-box">
+                    <div>
+                        <div class="flow-step-number">3</div>
+                        <div class="flow-icon">👅</div>
+                    </div>
+                    <div class="flow-step-title">E-Tongue Testing</div>
+                    <ul class="flow-step-list">
+                        <li>Electronic taste receptors</li>
+                        <li>Volatile organic compounds</li>
+                    </ul>
+                </div>
+                
+                <div class="flow-step-box">
+                    <div>
+                        <div class="flow-step-number">4</div>
+                        <div class="flow-icon">📊</div>
+                    </div>
+                    <div class="flow-step-title">Taste Fingerprinting</div>
+                    <ul class="flow-step-list">
+                        <li>Unique Taste Profiles (Radar)</li>
+                        <li>Patern recognition</li>
+                    </ul>
+                </div>
+
+                <div class="flow-step-box">
+                    <div>
+                        <div class="flow-step-number">5</div>
+                        <div class="flow-icon">🧠</div>
+                    </div>
+                    <div class="flow-step-title">AI Processing (ML)</div>
+                    <ul class="flow-step-list">
+                        <li>Advanced Machine Learning</li>
+                        <li>Data correlation</li>
+                        <li>Herb Identification</li>
+                    </ul>
+                </div>
+                
+                <div class="flow-step-box">
+                    <div>
+                        <div class="flow-step-number">6</div>
+                        <div class="flow-icon">🌿</div>
+                    </div>
+                    <div class="flow-step-title">Phytochemical Check</div>
+                    <ul class="flow-step-list">
+                        <li>Purity & Quality Check</li>
+                        <li>Component Distribution</li>
+                    </ul>
+                </div>
+
+                <div class="flow-step-box">
+                    <div>
+                        <div class="flow-step-number">7</div>
+                        <div class="flow-icon">💻</div>
+                    </div>
+                    <div class="flow-step-title">Reports & Dashboard</div>
+                    <ul class="flow-step-list">
+                        <li>Real-time reports</li>
+                        <li>Cloud Storage</li>
+                        <li>Tracked reports</li>
+                    </ul>
+                </div>
+
+            </div>
+            
+             <p class="section-subtitle">Key Platform Features</p>
+
+            <div class="features-container">
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <div class="feature-title">Dashboard Access</div>
+                    <div class="feature-description">View comprehensive analysis reports, historical data, and track quality metrics over time.</div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">⏱️</div>
+                    <div class="feature-title">Real-Time Testing</div>
+                    <div class="feature-description">Perform live sensor testing and receive instant feedback on sample purity and compound data.</div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">👤</div>
+                    <div class="feature-title">User Registration</div>
+                    <div class="feature-description">Securely register new users and manage access controls for your organization's data.</div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🍃</div>
+                    <div class="feature-title">Herb Database</div>
+                    <div class="feature-description">Explore detailed profiles, chemical standards, and baseline data for all supported herbs.</div>
+                </div>
+                
+            </div>
+        </section>
+        
+       
+
+        <div class="footer">
+            <div class="foo-content">
+                 <img style="width:50px; height:50px; margin-top:0px; margin-bottom: 5px;" src="../asset/Logo.jpg" alt="Logo">
+                <p style="margin: 0; font-weight: 700;">NOVATRA</p>
+            </div>
+            
+            <div class="foo-content">
+                <p> <a href="aboutus.html"> About Us</a></p>
+                <p> <a href="contact.html"> Contact</a> </p>
+                <p> <a href="faq.html">FAQS </a></p>
+            </div>
+
+            <div class="foo-content">
+                <p> Ph no  :  9025476322</p>
+                <p> Email<br>novatra2k25@gmail.com</p>
+                <p> Address <br>43,Thirunagar,dindigul. </p>
+            </div>
+
+            <div class="foo-content">
+                <div class ="gtrans" id="trans">
+                    <div class="translate"> 
+                        <h4>Translate</h4>
+                        <div id="google_translate_element"> 
+                        </div>
+                    </div>
+                </div>
+                <div class="social-icons">
+                    <a style = "cursor:pointer">
+                         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT-7GrB8uBQOrF6ObnYZ15IOaSkxDQ9PiIYAw-JL_9CCadt-QgFjkduWGxbaQo&usqp=CAU" alt="Social Icon 1">
+                    </a>
+                    <a style = "cursor:pointer">
+                        <img src="https://i.pinimg.com/474x/a2/4c/cc/a24ccc83bec854a87cc133fd52eb9161.jpg" alt="Social Icon 2">
+                    </a>
+                    <a style = "cursor:pointer">
+                        <img src="https://cdn3.iconfinder.com/data/icons/picons-social/57/43-twitter-512.png" alt="Social Icon 3">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const body = document.body;
+            const toggleButton = document.getElementById('theme-toggle');
+
+            const setTheme = (theme) => {
+                if (theme === 'light') {
+                    body.classList.remove('dark-theme');
+                    body.classList.add('light-theme');
+                    toggleButton.textContent = 'Switch to Dark';
+                    localStorage.setItem('theme', 'light');
+                } else {
+                    body.classList.remove('light-theme');
+                    body.classList.add('dark-theme');
+                    toggleButton.textContent = 'Switch to Light';
+                    localStorage.setItem('theme', 'dark');
+                }
+            };
+
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            setTheme(savedTheme);
+
+            toggleButton.addEventListener('click', () => {
+                const currentTheme = body.classList.contains('dark-theme') ? 'dark' : 'light';
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                setTheme(newTheme);
+            });
+        });
+    </script>
+    
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement(
+                {pageLanguage: 'en'},
+                'google_translate_element'
+            );
+        }
+    </script>
+
+    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+    <script src="script.js"></script>
+
+</body>
+</html>

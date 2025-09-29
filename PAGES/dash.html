@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Tongue Analysis Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+    
+    :root {
+        --font-family: 'Roboto', sans-serif;
+        --success-color: #28a745;
+        --warning-color: #ffc107;
+        --danger-color: #dc3545;
+        --positive-change: var(--success-color);
+        --negative-change: var(--danger-color);
+        --link-color: #007bff;
+    }
+
+    .light-theme {
+        --bg-color: #f8f9fa;
+        --card-bg: #ffffff;
+        --text-color: #343a40;
+        --text-dim: #6c757d;
+        --border-color: #dee2e6;
+        --header-bg-gradient: linear-gradient(135deg, #20c997, #17a2b8);
+    }
+
+    .dark-theme {
+        --bg-color: #1a1e2d;
+        --card-bg: #272c3b;
+        --text-color: #e2e6e9;
+        --text-dim: #9aa0a6;
+        --border-color: #3f4458;
+        --header-bg-gradient: linear-gradient(135deg, #17a2b8, #007bff);
+    }
+
+    body {
+        font-family: var(--font-family);
+        margin: 0;
+        padding: 0;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+    .dashboard-container {
+        max-width: 1300px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    h1, h2, h3 {
+        color: var(--text-color);
+        font-weight: 700;
+        margin: 0;
+    }
+    
+    p {
+        margin: 0;
+    }
+
+    .top-nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 0 15px 0;
+        border-bottom: 1px solid var(--border-color);
+        margin-bottom: 15px;
+    }
+
+    .nav-links a {
+        color: var(--text-dim);
+        text-decoration: none;
+        margin-right: 20px;
+        font-size: 0.9rem;
+        transition: color 0.3s;
+    }
+    .nav-links a:hover {
+        color: var(--link-color);
+    }
+
+    #theme-toggle {
+        padding: 8px 15px;
+        border: 1px solid var(--border-color);
+        background-color: var(--card-bg);
+        color: var(--text-color);
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+    .dashboard-header-bg {
+        background: var(--header-bg-gradient);
+        color: white;
+        padding: 40px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .header-content {
+        max-width: 700px;
+        position: relative;
+        z-index: 10;
+    }
+
+    .dashboard-header-bg h1 {
+        font-size: 2.2rem;
+        color: white;
+    }
+
+    .dashboard-header-bg p {
+        font-size: 1.1rem;
+        opacity: 0.8;
+        margin-top: 10px;
+    }
+
+    .kpi-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+
+    .kpi-card {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        transition: background-color 0.3s;
+    }
+
+    .kpi-title {
+        color: var(--text-dim);
+        font-size: 0.9rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .kpi-value {
+        font-size: 2.2rem;
+        font-weight: 700;
+        margin: 10px 0;
+        color: var(--text-color);
+    }
+    .kpi-value.warning {
+        color: var(--danger-color);
+    }
+
+    .kpi-change {
+        font-size: 0.9rem;
+        font-weight: 700;
+    }
+    .positive {
+        color: var(--positive-change);
+    }
+    .negative {
+        color: var(--negative-change);
+    }
+
+    .kpi-description {
+        font-size: 0.8rem;
+        color: var(--text-dim);
+        margin-top: 5px;
+    }
+
+    .main-content-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 30px;
+    }
+
+    .card {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 25px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        transition: background-color 0.3s;
+    }
+
+    .taste-fingerprint-card .card-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    .taste-fingerprint-card h2 {
+        font-size: 1.5rem;
+        flex-grow: 1;
+    }
+    .sample-info {
+        color: var(--text-dim);
+        font-size: 0.9rem;
+        margin-bottom: 20px;
+    }
+    .confidence-text {
+        font-size: 0.9rem;
+        color: var(--text-dim);
+        margin-left: 15px;
+    }
+    .pure-badge {
+        background-color: rgba(40, 167, 69, 0.2); 
+        color: var(--success-color); 
+        padding: 3px 8px;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: 700;
+    }
+
+    .radar-chart-placeholder {
+        position: relative;
+        width: 100%;
+        max-width: 450px;
+        height: 350px;
+        margin: 20px auto 30px;
+    }
+    .radar-axes {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='-10 -10 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='50,1 1,50 50,99 99,50' fill='none' stroke='%23e0e0e0' stroke-width='.5'%3E%3C/polygon%3E%3Cpolygon points='50,18 18,50 50,82 82,50' fill='none' stroke='%23e0e0e0' stroke-width='.5'%3E%3C/polygon%3E%3Cpolygon points='50,35 35,50 50,65 65,50' fill='none' stroke='%23e0e0e0' stroke-width='.5'%3E%3C/polygon%3E%3C!-- Reference Profile (Orange Dashed) --%3E%3Cpolygon points='50,25 30,65 70,80 85,50 60,10' fill='none' stroke='%23ffc107' stroke-width='2' stroke-dasharray='4'%3E%3C/polygon%3E%3C!-- Current Sample (Green Solid) --%3E%3Cpolygon points='50,30 25,70 65,85 90,45 65,15' fill='rgba(40,167,69,0.1)' stroke='%2328a745' stroke-width='2'%3E%3C/polygon%3E%3C/svg%3E");
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        text-align: center;
+    }
+
+    .radar-axes .label {
+        position: absolute;
+        font-size: 0.8rem;
+        color: var(--text-dim);
+    }
+    .label.top { top: 0; left: 50%; transform: translate(-50%, -120%); }
+    .label.top-right { top: 15%; right: 0; transform: translate(30%, -50%); }
+    .label.bottom-right { bottom: 0; right: 0; transform: translate(30%, 120%); }
+    .label.bottom-center { bottom: 0; left: 50%; transform: translate(-50%, 120%); }
+    .label.bottom-left { bottom: 0; left: 0; transform: translate(-30%, 120%); }
+    .label.top-left { top: 15%; left: 0; transform: translate(-30%, -50%); }
+
+    .radar-axes .circle { display: none; }
+
+
+    .chart-legend {
+        text-align: center;
+        font-size: 0.9rem;
+        margin-bottom: 20px;
+    }
+    .legend-item {
+        margin: 0 10px;
+        position: relative;
+        padding-left: 15px;
+    }
+    .legend-item::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 10px;
+        height: 10px;
+        border-radius: 2px;
+    }
+    .legend-item.current::before { background-color: var(--success-color); }
+    .legend-item.reference::before { 
+        background-color: var(--warning-color); 
+        border: 1px dashed var(--warning-color);
+        background-clip: padding-box;
+    }
+
+    .metrics-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px 5px;
+        font-size: 1rem;
+    }
+    .metrics-grid h3 {
+        grid-column: 1 / -1;
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+        color: var(--text-color);
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 5px;
+    }
+    .current-metric { color: var(--success-color); font-weight: 700; }
+    .ref-metric { color: var(--warning-color); font-weight: 400; }
+
+    .ml-results-card h2 {
+        font-size: 1.5rem;
+    }
+    .ml-results-card .subtitle {
+        color: var(--text-dim);
+        font-size: 0.9rem;
+        margin-bottom: 20px;
+    }
+
+    .result-item {
+        display: flex;
+        align-items: center;
+        padding: 15px 0;
+        border-bottom: 1px solid var(--border-color);
+    }
+    .result-item:last-of-type {
+        border-bottom: none;
+        margin-bottom: 20px;
+    }
+
+    .result-icon {
+        font-size: 1.5rem;
+        margin-right: 15px;
+    }
+
+    .result-details {
+        flex-grow: 1;
+    }
+
+    .result-header-line {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .result-details h3 {
+        font-size: 1.1rem;
+        font-weight: 700;
+    }
+
+    .batch-info {
+        font-size: 0.8rem;
+        color: var(--text-dim);
+        margin: 3px 0;
+    }
+
+    .badge {
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 700;
+    }
+    .pure-badge { background-color: rgba(40, 167, 69, 0.2); color: var(--success-color); }
+    .diluted-badge { background-color: rgba(255, 193, 7, 0.2); color: var(--warning-color); }
+    .adulterated-badge { background-color: rgba(220, 53, 69, 0.2); color: var(--danger-color); }
+    
+    .confidence-bar-container {
+        position: relative;
+        height: 6px;
+        background-color: var(--border-color);
+        border-radius: 3px;
+        margin-top: 5px;
+    }
+
+    .confidence-bar {
+        height: 100%;
+        border-radius: 3px;
+        transition: width 0.5s;
+    }
+    .success-bar { background-color: var(--success-color); }
+    .warning-bar { background-color: var(--warning-color); }
+    .danger-bar { background-color: var(--danger-color); }
+
+    .confidence-value {
+        position: absolute;
+        right: 0;
+        top: -15px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: var(--text-color);
+    }
+
+    .view-all {
+        display: block;
+        margin-top: 10px;
+        color: var(--success-color);
+        font-weight: 700;
+        text-align: right;
+        font-size: 0.9rem;
+    }
+
+    @media (max-width: 992px) {
+        .kpi-row {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        .main-content-grid {
+            grid-template-columns: 1fr;
+        }
+        .dashboard-header-bg {
+            padding: 30px 20px;
+        }
+        .dashboard-header-bg h1 {
+            font-size: 1.8rem;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .kpi-row {
+            grid-template-columns: 1fr;
+        }
+        .metrics-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        .top-nav {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .nav-links {
+            margin-top: 10px;
+        }
+    }
+    </style>
+</head>
+<body class="light-theme">
+
+    <div class="dashboard-container">
+        
+        <nav class="top-nav">
+            <div class="nav-links">
+                <a href="page.html">Home</a>
+                <a href="real.html">Real-Time</a>
+                <a href="Register.html">Register</a>
+                <a href="herb.html">Herbs</a>
+            </div>
+            
+            <button id="theme-toggle">Switch to Dark Theme</button>
+        </nav>
+        
+        <header class="dashboard-header-bg">
+            <div class="header-content">
+                <h1>Herbal Authenticity Dashboard</h1>
+                <p>Real-time E-tongue sensor monitoring, ML-powered identification, and comprehensive purity analysis for herbal samples.</p>
+            </div>
+        </header>
+
+        <section class="kpi-row">
+            <div class="kpi-card">
+                <div class="kpi-title">Total Samples <span class="icon-line-chart">📈</span></div>
+                <div class="kpi-value">2,847</div>
+                <div class="kpi-footer">
+                    <span class="kpi-change positive">+12.5% vs last month</span>
+                    <p class="kpi-description">Processed this month</p>
+                </div>
+            </div>
+            
+            <div class="kpi-card">
+                <div class="kpi-title">Purity Rate <span class="icon-check">✅</span></div>
+                <div class="kpi-value">87.3%</div>
+                <div class="kpi-footer">
+                    <span class="kpi-change positive">+2.1% vs last month</span>
+                    <p class="kpi-description">Pure samples detected</p>
+                </div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-title">Adulterated <span class="icon-alert">⚠️</span></div>
+                <div class="kpi-value warning">8.7%</div>
+                <div class="kpi-footer">
+                    <span class="kpi-change negative">-1.2% vs last month</span>
+                    <p class="kpi-description">Adulterated samples found</p>
+                </div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-title">ML Confidence <span class="icon-arrow-up">↗️</span></div>
+                <div class="kpi-value">94.2%</div>
+                <div class="kpi-footer">
+                    <span class="kpi-change positive">+0.8% vs last month</span>
+                    <p class="kpi-description">Average identification accuracy</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="main-content-grid">
+            
+            <div class="card taste-fingerprint-card">
+                <div class="card-header">
+                    <h2>Taste Fingerprint Analysis</h2>
+                    <span class="badge pure-badge">✅ Pure Sample</span>
+                    <p class="confidence-text">Confidence: <strong>94.2%</strong></p>
+                </div>
+                <p class="sample-info">Sample: Turmeric Extract - Sample #TUR-2024-001</p>
+
+                <div class="radar-chart-placeholder">
+                    <div class="radar-axes">
+                        <span class="label top">Sweet</span>
+                        <span class="label top-right">Bitter</span>
+                        <span class="label bottom-right">Sour</span>
+                        <span class="label bottom-center">Salty</span>
+                        <span class="label bottom-left">Umami</span>
+                        <span class="label top-left">Astringent</span>
+                        
+                        <div class="circle c-75">75</div> 
+                        <div class="circle c-50">50</div>
+                        <div class="circle c-25">25</div>
+                        <div class="circle c-0">0</div>
+                    </div>
+                </div>
+
+                <div class="chart-legend">
+                    <span class="legend-item current">Current Sample</span>
+                    <span class="legend-item reference">Reference Profile</span>
+                </div>
+
+                <h3>Taste Profile Metrics</h3>
+                <div class="metrics-grid">
+                    <p>Sweet: <span class="current-metric">65</span> / <span class="ref-metric">72</span></p>
+                    <p>Bitter: <span class="current-metric">82</span> / <span class="ref-metric">78</span></p>
+                    <p>Sour: <span class="current-metric">45</span> / <span class="ref-metric">48</span></p>
+                    <p>Salty: <span class="current-metric">23</span> / <span class="ref-metric">28</span></p>
+                    <p>Umami: <span class="current-metric">56</span> / <span class="ref-metric">61</span></p>
+                    <p>Astringent: <span class="current-metric">74</span> / <span class="ref-metric">69</span></p>
+                </div>
+            </div>
+
+            <div class="card ml-results-card">
+                <h2>Latest ML Results</h2>
+                <p class="subtitle">Recent herb identification and purity analysis</p>
+
+                <div class="result-item">
+                    <div class="result-icon success">✅</div>
+                    <div class="result-details">
+                        <div class="result-header-line">
+                            <h3>Turmeric</h3>
+                            <span class="badge pure-badge">Pure</span>
+                        </div>
+                        <p class="batch-info">Batch: TUR-2024-001 • 2 min ago</p>
+                        <div class="confidence-bar-container">
+                            <div class="confidence-bar success-bar" style="width: 96.2%;"></div>
+                            <span class="confidence-value">96.2%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="result-item">
+                    <div class="result-icon warning">⚠️</div>
+                    <div class="result-details">
+                        <div class="result-header-line">
+                            <h3>Ginseng</h3>
+                            <span class="badge diluted-badge">Diluted</span>
+                        </div>
+                        <p class="batch-info">Batch: GIN-2024-015 • 5 min ago</p>
+                        <div class="confidence-bar-container">
+                            <div class="confidence-bar warning-bar" style="width: 87.5%;"></div>
+                            <span class="confidence-value">87.5%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="result-item">
+                    <div class="result-icon danger">🚨</div>
+                    <div class="result-details">
+                        <div class="result-header-line">
+                            <h3>Green Tea</h3>
+                            <span class="badge adulterated-badge">Adulterated</span>
+                        </div>
+                        <p class="batch-info">Batch: GT-2024-032 • 12 min ago</p>
+                        <div class="confidence-bar-container">
+                            <div class="confidence-bar danger-bar" style="width: 78.3%;"></div>
+                            <span class="confidence-value">78.3%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="#" class="view-all">View all results →</a>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const body = document.body;
+            const toggleButton = document.getElementById('theme-toggle');
+
+            const setTheme = (theme) => {
+                if (theme === 'dark') {
+                    body.classList.remove('light-theme');
+                    body.classList.add('dark-theme');
+                    toggleButton.textContent = 'Switch to Light Theme';
+                    localStorage.setItem('dashboardTheme', 'dark');
+                } else {
+                    body.classList.remove('dark-theme');
+                    body.classList.add('light-theme');
+                    toggleButton.textContent = 'Switch to Dark Theme';
+                    localStorage.setItem('dashboardTheme', 'light');
+                }
+            };
+
+            const savedTheme = localStorage.getItem('dashboardTheme');
+            if (savedTheme) {
+                setTheme(savedTheme);
+            } else {
+                toggleButton.textContent = body.classList.contains('dark-theme') ? 'Switch to Light Theme' : 'Switch to Dark Theme';
+            }
+
+            toggleButton.addEventListener('click', function() {
+                const currentTheme = body.classList.contains('dark-theme') ? 'dark' : 'light';
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                setTheme(newTheme);
+            });
+        });
+    </script>
+</body>
+</html>

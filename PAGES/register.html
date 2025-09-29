@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register New Sample</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #17a2b8;
+            --secondary-blue: #0d6efd;
+            --link-hover-color: #007bff;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-color: #343a40;
+            --text-dim: #6c757d;
+            --border-color: #ced4da;
+            --input-focus-border: #80bdff;
+            --input-focus-shadow: rgba(0, 123, 255, 0.25);
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .top-nav {
+            max-width: 900px;
+            margin: 0px auto 20px;
+            display: flex;
+            justify-content: flex-start;
+            gap: 20px;
+            padding: 10px 0;
+        }
+
+        .top-nav a {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 500;
+            padding: 5px 0;
+            transition: color 0.2s;
+        }
+
+        .top-nav a:hover {
+            color: var(--link-hover-color);
+            border-bottom: 2px solid var(--link-hover-color);
+        }
+    
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            background-color: var(--primary-blue);
+            color: white;
+            padding: 15px 20px;
+            font-size: 1.2rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+        }
+        .header span {
+            margin-right: 10px;
+            font-size: 1.5rem;
+        }
+
+        .form-body {
+            background-color: var(--card-bg);
+            padding: 25px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 25px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-color);
+            margin-bottom: 5px;
+        }
+
+        input[type="text"], 
+        textarea, 
+        select {
+            width: 100%;
+            padding: 10px 12px;
+            font-size: 1rem;
+            color: var(--text-color);
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+            box-sizing: border-box;
+        }
+
+        input::placeholder,
+        textarea::placeholder {
+            color: var(--text-dim);
+            opacity: 0.7;
+            font-style: italic;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            color: var(--text-color);
+            background-color: var(--card-bg);
+            border-color: var(--input-focus-border);
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem var(--input-focus-shadow);
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .btn-register {
+            width: 100%;
+            padding: 15px;
+            background-color: var(--secondary-blue);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s, box-shadow 0.2s;
+            margin-top: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .btn-register:hover {
+            background-color: var(--primary-blue);
+            box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-register span {
+            margin-right: 8px;
+            font-size: 1.2rem;
+        }
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .top-nav {
+                justify-content: space-around;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="top-nav">
+    <a href="page.html">Home</a>
+    <a href="dash.html">Dashboard</a>
+    <a href="real.html">Real-Time</a>
+    <a href="herb.html">Herbs</a>
+</nav>
+<div class="container">
+    
+    <div class="header">
+        <span>🔬</span> Register New Sample
+    </div>
+
+    <form class="form-body">
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="sourceLocation">Source Location</label>
+                <input type="text" id="sourceLocation" placeholder="e.g., Farm District, Location" required>
+            </div>
+            <div class="form-group">
+                <label for="batchNumber">Batch Number</label>
+                <input type="text" id="batchNumber" placeholder="e.g., BTH-2024-001" required>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="claimedHerbName">Claimed Herb Name</label>
+                <input type="text" id="claimedHerbName" placeholder="e.g., Turmeric, Ginger, etc." required>
+            </div>
+            <div class="form-group">
+                <label for="sampleCondition">Sample Condition</label>
+                <select id="sampleCondition" required>
+                    <option value="Pure">Pure</option>
+                    <option value="Adulterated">Adulterated</option>
+                    <option value="Diluted">Diluted</option>
+                    <option value="Saturated">Saturated</option>
+                    <option value="Unknown">Unknown</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="collectorID">Collector ID</label>
+                <input type="text" id="collectorID" placeholder="e.g., TECH-001">
+            </div>
+            <div class="form-group"></div> 
+        </div>
+
+        <div class="form-row">
+            <div class="form-group" style="flex: 100%;"> 
+                <label for="additionalNotes">Additional Notes</label>
+                <textarea id="additionalNotes" placeholder="Any additional observations or notes..."></textarea>
+            </div>
+        </div>
+
+        <button type="submit" class="btn-register">
+            <span>➕</span> Register Sample
+        </button>
+    </form>
+
+</div>
+
+</body>
+</html>
